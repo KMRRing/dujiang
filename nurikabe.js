@@ -9,7 +9,7 @@ import { LEVELS as LADDER, CHAPTERS, COUNT, LADDER_VERSION, chapterOf, seedOf, k
 import { scale } from "./wide.js";
 import { bindSwitcher, APPS } from "./apps.js";
 import "./pwa.js";
-import { part, action, line, choice, ticks, onPause, isPaused, todayPart } from "./menu.js";
+import { part, action, line, choice, toggle, ticks, onPause, isPaused, todayPart } from "./menu.js";
 import { ramp } from "./ramp.js";
 import { rungs, startFor, split } from "./ramp-steps.js";
 import { today, noteDayTime, arrivedForToday, IN_FRAME } from "./suite.js";
@@ -668,7 +668,8 @@ function openMenu() {
   const play = part(body, "play"), levels = track === "levels" && !COOP;
   play.append(action(COOP ? "Another puzzle" : "New puzzle", () => (levels ? confirmLevelBlock() : confirmStart("random")), "primary"));
   if (S && !S.done && started()) play.append(action("Clear the board", clearBoard));
-  play.append(action(viewShown === "model" ? "Play in 2D" : "Play in 3D", () => setView(viewShown === "model" ? "board" : "model"), "link"), action("The rules", showRules, "link"));
+  play.append(action("The rules", showRules, "link"));
+  part(body, "settings").append(toggle("Play in 2D (saves battery)", viewShown !== "model", on => setView(on ? "board" : "model")));
   if (!COOP) {
     content.append(choice("Play", [["levels", "Levels"], ["free", "Free play"]], track, v => { setTrack(v); openMenu(); }));
     if (levels) content.append(levelList());
